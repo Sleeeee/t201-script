@@ -9,11 +9,11 @@ class Fetcher:
         self.directory = os.path.expanduser("~/.t201-script")
         self.headers = ["Product ID", "Company", "Origin", "Category", "Stock", "Unit Price"]
 
-    def fetch_data(self, filters: list, sort: list, reverse: bool) -> list:
+    def fetch_data(self, filters: list, sort: list, reverse: bool, columns: list) -> list:
         """
         Fetches data from CSV files contained in self.directory
         PRE : filters contains three items (key, operator, value) or is None / sort contains one item (key corresponding to a column header) or is None
-        POST : Returns a list containing each CSV row matching the filters (all rows if filters is None), sorted by sort (not sorted if sort is None)
+        POST : Returns a list containing each CSV row containing the specified columns, matching the filters (all rows if filters is None), sorted by sort (not sorted if sort is None)
         """
         data = []
         for filename in os.listdir(self.directory):
@@ -22,6 +22,8 @@ class Fetcher:
                     reader = csv.DictReader(f)
                     for row in reader:
                         if self.row_matches_filters(row, filters):
+                            if columns:
+                                row = {key: row[key] for key in columns}
                             data.append(row)
             except Exception as e:
                 print(f"Error processing file {filename} : {e}")
@@ -53,4 +55,4 @@ class Fetcher:
 
             if not op_func(row_value, value):
                 return False
-            return True
+        return True
