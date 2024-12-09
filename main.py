@@ -3,6 +3,8 @@ from datagen import DataGen
 from fetcher import Fetcher
 from utils import Utils
 
+VALID_OPERATORS = ["==", "!=", "<", ">", "<=", ">="]
+
 def main():
     datagen, utils = DataGen(), Utils()
 
@@ -16,7 +18,7 @@ def main():
     subparsers.add_parser("delete", help="Delete all product data")
 
     fetch_parser = subparsers.add_parser("fetch", help="Fetch and sort data")
-    fetch_parser.add_argument("-f", "--filter", action="append", nargs=2, metavar=("KEY", "VALUE"), help="Filter data by a specific key and value")
+    fetch_parser.add_argument("-f", "--filter", action="append", nargs=3, metavar=("KEY", "OPERATOR", "VALUE"), help="Filter data by a specific key, logic operator and value")
     fetch_parser.add_argument("-s", "--sort", choices=["Product ID", "Company", "Origin", "Category", "Stock", "Unit Price"], help="Field to sort data by")
     fetch_parser.add_argument("-r", "--reverse", action="store_true", help="Sort data in descending order")
 
@@ -35,17 +37,23 @@ def main():
             print("[t201-script] Data deleted successfully")
 
     elif args.command == "fetch":
-        filters = {key: value for key, value in args.filter} if args.filter else None
+        filters = []
+        if args.filter:
+            for filter_args in args.filter:
+                key, op, value = filter_args
+                filters.append((key, op, value))
         sort = args.sort
         reverse = args.reverse
+
         fetch_description = "[t201-script] Are you sure you want all data"
         if filters:
-            filter_desc = ", ".join([f"{key} = {value}" for key, value in filters.items()])
+            filter_desc = ", ".join([f"{key} {op} {value}" for key, op, value in filters])
             fetch_description += f" with filters ({filter_desc})"
         if sort:
             fetch_description += f" sorted by '{sort}'"
             fetch_description += f" in {"descending" if reverse else "ascending"} order"
         fetch_description += " ?"
+
         if utils.validate_input(fetch_description):
             data = Fetcher().fetch_data(filters, sort, reverse)
             for row in data:

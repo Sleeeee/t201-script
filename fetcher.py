@@ -1,5 +1,8 @@
+import operator
 import csv
 import os
+
+OPERATORS = {"==": operator.eq, "!=": operator.ne, "<": operator.lt, ">": operator.gt, "<=": operator.le, ">=": operator.ge}
 
 class Fetcher:
     def __init__(self):
@@ -12,15 +15,32 @@ class Fetcher:
             try:
                 with open(os.path.join(self.directory, filename), "r") as f:
                     reader = csv.DictReader(f)
-                    for line in reader:
-                        if filters:
-                            matches = all(line.get(key) == value for key, value in filters.items())
-                            if matches:
-                                data.append(line)
-                        else:
-                            data.append(line)
+                    for row in reader:
+                        if self.row_matches_filters(row, filters):
+                            data.append(row)
             except Exception as e:
                 print(f"Error processing file {filename} : {e}")
         if sort:
             data.sort(key=lambda d: d[sort], reverse=reverse)
         return data
+
+    def row_matches_filters(self, row, filters):
+        if not filters:
+            return True
+        for key, op, value in filters:
+            op_func =OPERATORS.get(op)
+            if not op_func:
+                raise ValueError(f"Invalid operator: {op}")
+
+            row_value = row.get(key)
+            try:
+                # Parse numbers
+                row_value = float(row_value)
+                value = float(value)
+            except ValueError:
+                # Keep strings as strings
+                pass
+
+            if not op_func(row_value, value):
+                return False
+            return True
