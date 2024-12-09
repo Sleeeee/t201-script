@@ -56,3 +56,41 @@ class Fetcher:
             if not op_func(row_value, value):
                 return False
         return True
+
+    def get_analytics(self, data: list) -> tuple:
+        """
+        Generate analytics from the input data
+        PRE : data is a list of dictionaries containing valid column names
+        POST :
+        """
+        numeric_stats = {}
+        categorical_counts = {}
+
+        for row in data:
+            for key, value in row.items():
+                if key in ["Product ID"]:
+                    continue
+                try:
+                    numeric_value = float(value)
+                    if key not in numeric_stats:
+                        numeric_stats[key] = {
+                            "total": 0,
+                            "max": numeric_value,
+                            "min": numeric_value,
+                            "count": 0
+                        }
+                    numeric_stats[key]["total"] += numeric_value
+                    numeric_stats[key]["max"] = max(numeric_value, numeric_stats[key]["max"])
+                    numeric_stats[key]["min"] = min(numeric_value, numeric_stats[key]["min"])
+                    numeric_stats[key]["count"] += 1
+                except ValueError:
+                    # If the value is not numeric
+                    if key not in categorical_counts:
+                        categorical_counts[key] = {}
+                    categorical_counts[key][value] = categorical_counts[key].get(value, 0) + 1
+
+        for key, stats in numeric_stats.items():
+            # Compute means once all the data is fetched
+            stats["mean"] = stats["total"] / stats["count"]
+
+        return numeric_stats, categorical_counts

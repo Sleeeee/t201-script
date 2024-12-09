@@ -4,9 +4,10 @@ from fetcher import Fetcher
 from utils import Utils
 
 VALID_OPERATORS = ["==", "!=", "<", ">", "<=", ">="]
+COLUMNS_NAMES = ["Product ID", "Company", "Origin", "Category", "Stock", "Unit Price"]
 
 def main():
-    datagen, utils = DataGen(), Utils()
+    datagen, fetcher, utils = DataGen(), Fetcher(), Utils()
 
     parser = argparse.ArgumentParser(description="Manage and query product data")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -17,7 +18,6 @@ def main():
 
     subparsers.add_parser("delete", help="Delete all product data")
 
-    COLUMNS_NAMES = ["Product ID", "Company", "Origin", "Category", "Stock", "Unit Price"]
     fetch_parser = subparsers.add_parser("fetch", help="Fetch and sort data")
     fetch_parser.add_argument("-f", "--filter", action="append", nargs=3, metavar=("KEY", "OPERATOR", "VALUE"), help="Filter data by a specific key, logic operator and value")
     fetch_parser.add_argument("-s", "--sort", choices=COLUMNS_NAMES, help="Field to sort data by")
@@ -64,9 +64,10 @@ def main():
         if not utils.validate_input(fetch_description):
             print("[t201-script] Data fetching aborted")
             return
-        data = Fetcher().fetch_data(filters, sort, reverse, columns)
+        data = fetcher.fetch_data(filters, sort, reverse, columns)
         for row in data:
             print(row)
+        print(fetcher.get_analytics(data))
         print("[t201-script] Data fetched successfully")
         if not utils.validate_input("Do you wish to export this data ?"):
             print("[t201-script] Data was not exported")
