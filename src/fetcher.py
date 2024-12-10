@@ -1,3 +1,4 @@
+import json
 import operator
 import csv
 import os
@@ -7,7 +8,19 @@ class Fetcher:
 
     def __init__(self):
         self.directory = os.path.expanduser("~/.t201-script")
-        self.headers = ["Product ID", "Company", "Origin", "Category", "Stock", "Unit Price"]
+
+    @staticmethod
+    def get_column_type(value):
+        """
+        Returns the type of the value given, categorized either number or text
+        PRE : None
+        POST : Returns float if value is a number, str if not
+        """
+        try:
+            float(value)
+            return float
+        except ValueError:
+            return str
 
     def fetch_data(self, filters: list, sort: list, reverse: bool, columns: list) -> list:
         """
@@ -28,7 +41,9 @@ class Fetcher:
             except Exception as e:
                 print(f"Error processing file {filename} : {e}")
         if sort:
-            data.sort(key=lambda d: d[sort], reverse=reverse)
+            if data:
+                column_type = self.get_column_type(data[0][sort])
+                data.sort(key=lambda d: column_type(d[sort]), reverse=reverse)
         return data
 
     def row_matches_filters(self, row: dict, filters: list) -> bool:
@@ -57,7 +72,8 @@ class Fetcher:
                 return False
         return True
 
-    def get_analytics(self, data: list) -> tuple:
+    @staticmethod
+    def get_analytics(data: list) -> tuple:
         """
         Generate analytics from the input data
         PRE : data is a list of dictionaries containing valid column names
@@ -68,8 +84,6 @@ class Fetcher:
 
         for row in data:
             for key, value in row.items():
-                if key in ["Product ID"]:
-                    continue
                 try:
                     numeric_value = float(value)
                     if key not in numeric_stats:
@@ -94,3 +108,15 @@ class Fetcher:
             stats["mean"] = stats["total"] / stats["count"]
 
         return numeric_stats, categorical_counts
+
+    def export_data(self, content: list) -> None:
+        """
+        Export data into a JSON file in self.directory
+        PRE : self.directory exists
+        POST : output.json exists in self.directory, it contains the data given as parameter dumped to JSON
+        """
+        try:
+            with open(os.path.join(self.directory, "output.json"), "w") as file:
+                    file.write(f"{json.dumps(content)}\n")
+        except Exception as e:
+            print(f"Error processing file output.json : {e}")

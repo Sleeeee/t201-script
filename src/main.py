@@ -67,12 +67,17 @@ def main():
         data = fetcher.fetch_data(filters, sort, reverse, columns)
         for row in data:
             print(row)
-        print(fetcher.get_analytics(data))
+        analytics = fetcher.get_analytics(data)
+        print(analytics)
         print("[t201-script] Data fetched successfully")
         if not utils.validate_input("Do you wish to export this data ?"):
             print("[t201-script] Data was not exported")
             return
-
+        if not utils.validate_input("Do you want to include analytics ?"):
+            content = [data]
+        else:
+            content = [data, analytics]
+        fetcher.export_data(content)
 
 if __name__ == "__main__":
     try:
