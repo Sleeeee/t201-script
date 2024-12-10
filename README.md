@@ -3,6 +3,7 @@ Cours de Développement Informatique II - V. Van den Schrieck, X. Dubruille -Dé
 ## Documentation
 - [Fonctionnalités](https://github.com/Sleeeee/t201-script/wiki/Fonctionnalit%C3%A9s)
 - Rapport sur l'[utilisation de l'IA](https://github.com/Sleeeee/t201-script/wiki/Utilisation-de-l'IA)
+- [Code coverage](https://github.com/Sleeeee/t201-script/wiki/Code-coverage)
 ## Utilisation
 ### Arguments
 Le script s'exécute via la ligne de commande avec l'interpréteur Python : `python src/main.py`. Voici un bref aperçu des arguments qui peuvent lui être passés :
