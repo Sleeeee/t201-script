@@ -30,6 +30,8 @@ class DataGen:
         PRE : None
         POST : Returns a list containing n fake city names
         """
+        if n <= 0:
+            raise ValueError(f"n={n} must be > 0")
         # Only returning last word to avoid 'South', 'New', ... and ensuring unique city names (for simplicity naming product ids)
         return [self.fake.city().split(" ")[-1] for _ in range(n)]
 
@@ -39,6 +41,8 @@ class DataGen:
         PRE : None
         POST : Returns a list containing n fake company names
         """
+        if n <= 0:
+            raise ValueError(f"n={n} must be > 0")
         # Replace avoids commas causing errors in CSV output
         return [self.fake.company().replace(",", "") for _ in range(n)]
 
@@ -48,14 +52,18 @@ class DataGen:
         PRE : None
         POST : Returns a list containing n arbitrary country names
         """
+        if n <= 0:
+            raise ValueError(f"n={n} must be > 0")
         return [self.fake.country() for _ in range(n)]
 
-    def fake_words(self, n=50):
+    def fake_words(self, n: int=50):
         """
         Generates a list of random words
         PRE : None
         POST : Returns a list containing n arbitrary words
         """
+        if n <= 0:
+            raise ValueError(f"n={n} must be > 0")
         return [self.fake.word().capitalize() for _ in range(n)]
 
     def generate_data(self, files: int, rows: int) -> None:

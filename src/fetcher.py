@@ -22,7 +22,7 @@ class Fetcher:
         except ValueError:
             return str
 
-    def fetch_data(self, filters: list, sort: list, reverse: bool, columns: list) -> list:
+    def fetch_data(self, filters: list=None, sort: str=None, reverse: bool=False, columns: list=None) -> list:
         """
         Fetches data from CSV files contained in self.directory
         PRE : filters contains three items (key, operator, value) or is None / sort contains one item (key corresponding to a column header) or is None

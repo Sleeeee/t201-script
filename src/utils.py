@@ -1,5 +1,6 @@
 class Utils:
-    def validate_input(self, message: str) -> bool:
+    @staticmethod
+    def validate_input(message: str) -> bool:
         """
         Asks for the user to confirm their input
         PRE : None
