@@ -32,3 +32,5 @@ Je veux récupérer uniquement les données de prix unitaire des produits des en
 ```
 [t201-script] python src/main.py fetch -c "Unit Price" -f Company "<" F -s "Unit Price" -r
 ```
+## Présentation vidéo
+L'exécution du script est démontrée dans [cette vidéo](https://ephec-my.sharepoint.com/:v:/g/personal/he202394_students_ephec_be/Edg-yeJwYGxNk52HHYR8Ug8Bh9qhxVGYsfV2GArHcRZIIw?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=iWPOnm). Les tests unitaires sont présentés [ici](https://ephec-my.sharepoint.com/:v:/g/personal/he202394_students_ephec_be/EcNqyHr0VIJCtYwCHLXba0EBGA26P5H1oDHAYwb-JAg95A?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=ns4NTU).
